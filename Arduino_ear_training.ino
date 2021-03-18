@@ -39,6 +39,9 @@ int beats[] = {1,1,1,1,1,1,4,4,2,1,1,1,1,1,1,4,4,2};
 
 int tempo = 80;
 
+const int numNotes = 8;  // number of notes we're storing
+char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
 void setup() 
 {
@@ -48,26 +51,33 @@ void setup()
   pinMode(ledPin, OUTPUT);
 }
 
-void doButtonStuff()
+bool doButtonStuff()
 {
   //this is HIGH or LOW
   buttonState = digitalRead(buttonPin);
   if(buttonState == HIGH)
   {
     char note = 'c';
-    int noteLen = 1;
     int currFreq = getFrequency(note);
     Serial.println(note);
     Serial.println(currFreq);
-    tone(buzzerPin, currFreq, noteLen*tempo);
+    
+    //noteLen = 1;
+    int soundTime = 500; //ms //noteLen*tempo;
+    tone(buzzerPin, currFreq, soundTime);
+
+    delay(1000);
   }
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   digitalWrite(ledPin, buttonState);
+
+  return buttonState == HIGH;
 }
 
-char getRandomNote()
+char getRandomNoteName()
 {
-  return 'c';
+  int randIndex = random(numNotes);
+  return noteNames[randIndex];
 }
 
 int extraHz = 0;
@@ -100,14 +110,12 @@ void loop()
   // We only want to play the song once, so we'll pause forever:
   while(true)
   {
-    doButtonStuff();
+    if(doButtonStuff())
+    {
+      break;  
+    }
   }
 }
-
-
-const int numNotes = 8;  // number of notes we're storing
-char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
-int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
 int getFrequency(char note) 
 {
