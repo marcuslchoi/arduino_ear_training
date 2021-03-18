@@ -81,7 +81,7 @@ char getRandomNoteName()
 }
 
 int extraHz = 0;
-void loop() 
+void playIntroSong()
 {
   int i, duration;
   int songLength = sizeof(beats)/sizeof(int);
@@ -106,8 +106,12 @@ void loop()
   }
   Serial.println();
   extraHz += 100;
-  
-  // We only want to play the song once, so we'll pause forever:
+}
+
+void loop() 
+{
+  playIntroSong();
+
   while(true)
   {
     if(doButtonStuff())
