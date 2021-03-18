@@ -1,46 +1,4 @@
 /*
-
-Example sketch 09
-
-BUZZER
-
-  Use the buzzer to play a song!
-
-  The buzzer in your Inventor's Kit is an electromechanical
-  component you can use to make noise. Inside the buzzer is a
-  coil of wire and a small magnet. When current flows through 
-  the coil, it becomes magnetized and pulls towards the magnet,
-  creating a tiny "click". When you do this thousands of times
-  per second, you create tones.
-  
-  The Arduino has a built-in command called tone() which clicks
-  the buzzer at a certain frequency. This sketch knows the
-  frequencies of the common notes, allowing you to create songs.
-  We're never going to let you down!
-
-Hardware connections:
-
-  The buzzer has two pins. One is positive and one is negative.
-  The postitive pin is marked by a "+" symbol on both the top
-  and bottom of the buzzer.
-  
-  Connect the positive pin to Arduino digital pin 9.
-  (Note that this must be a PWM pin.)
-  Connect the negative pin to GND.
-  
-  Tip: if the buzzer doesn't fit into the breadboard easily,
-  try rotating it slightly to fit into diagonal holes.
-
-This sketch was written by SparkFun Electronics,
-with lots of help from the Arduino community.
-(This sketch was originally developed by D. Cuartielles for K3)
-This code is completely free for any use.
-Visit http://www.arduino.cc to learn about the Arduino.
-
-Version 2.0 6/2012 MDG
-*/
-
-/*
 This sketch uses the buzzer to play songs.
 The Arduino's tone() command will play notes of a given frequency.
 We'll provide a function that takes in note characters (a-g),
@@ -98,7 +56,7 @@ void doButtonStuff()
   {
     char note = 'c';
     int noteLen = 1;
-    int currFreq = frequency(note);
+    int currFreq = getFrequency(note);
     Serial.println(note);
     Serial.println(currFreq);
     tone(buzzerPin, currFreq, noteLen*tempo);
@@ -106,6 +64,11 @@ void doButtonStuff()
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   digitalWrite(ledPin, buttonState);
 }
+
+//char[] getRandomNotes()
+//{
+//  return ['d','c'];
+//}
 
 int extraHz = 0;
 void loop() 
@@ -123,7 +86,7 @@ void loop()
     }
     else                          // otherwise, play the note
     {
-      int currFreq = frequency(songNotes[i]) + extraHz;
+      int currFreq = getFrequency(songNotes[i]) + extraHz;
       Serial.print(currFreq);
       Serial.print(' ');
       tone(buzzerPin, currFreq, duration);
@@ -143,7 +106,7 @@ void loop()
 
 
 
-int frequency(char note) 
+int getFrequency(char note) 
 {
   // This function takes a note character (a-g), and returns the
   // corresponding frequency in Hz for the tone() function.
