@@ -65,10 +65,10 @@ void doButtonStuff()
   digitalWrite(ledPin, buttonState);
 }
 
-//char[] getRandomNotes()
-//{
-//  return ['d','c'];
-//}
+char getRandomNote()
+{
+  return 'c';
+}
 
 int extraHz = 0;
 void loop() 
@@ -105,6 +105,9 @@ void loop()
 }
 
 
+const int numNotes = 8;  // number of notes we're storing
+char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
 int getFrequency(char note) 
 {
@@ -112,11 +115,7 @@ int getFrequency(char note)
   // corresponding frequency in Hz for the tone() function.
   
   int i;
-  const int numNotes = 8;  // number of notes we're storing
 
-  char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
-  int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
-  
   // Now we'll search through the letters in the array, and if
   // we find it, we'll return the frequency for that note.
   
