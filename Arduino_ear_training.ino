@@ -68,7 +68,7 @@ int buttonState = 0;         // variable for reading the pushbutton status
 // Notes is an array of text characters corresponding to the notes
 // in your song. A space represents a rest (no tone)
 
-char notes[] = "cdfda ag cdfdg gf "; // a space represents a rest
+char songNotes[] = "cdfda ag cdfdg gf "; // a space represents a rest
 
 // Beats is an array values for each note and rest.
 // A "1" represents a quarter-note, 2 a half-note, etc.
@@ -117,13 +117,13 @@ void loop()
   {
     duration = beats[i] * tempo;  // length of note/rest in ms
     
-    if (notes[i] == ' ')          // is this a rest? 
+    if (songNotes[i] == ' ')          // is this a rest? 
     {
       delay(duration);            // then pause for a moment
     }
     else                          // otherwise, play the note
     {
-      int currFreq = frequency(notes[i]) + extraHz;
+      int currFreq = frequency(songNotes[i]) + extraHz;
       Serial.print(currFreq);
       Serial.print(' ');
       tone(buzzerPin, currFreq, duration);
@@ -142,6 +142,7 @@ void loop()
 }
 
 
+
 int frequency(char note) 
 {
   // This function takes a note character (a-g), and returns the
@@ -150,7 +151,7 @@ int frequency(char note)
   int i;
   const int numNotes = 8;  // number of notes we're storing
 
-  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+  char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
   int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
   
   // Now we'll search through the letters in the array, and if
@@ -158,7 +159,7 @@ int frequency(char note)
   
   for (i = 0; i < numNotes; i++)  // Step through the notes
   {
-    if (names[i] == note)         // Is this the one?
+    if (noteNames[i] == note)         // Is this the one?
     {
       return(frequencies[i]);     // Yes! Return the frequency
     }
