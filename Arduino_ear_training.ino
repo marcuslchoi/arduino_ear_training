@@ -17,11 +17,13 @@ and returns the corresponding frequency from this table:
 For more information, see http://arduino.cc/en/Tutorial/Tone
 */
 
-const int buttonPin = 2; 
+const int buttonPin1 = 2; 
+const int buttonPin2 = 3; 
 const int ledPin =  13;   
 const int buzzerPin = 9;  
 
-int buttonState = 0;         // variable for reading the pushbutton status
+int buttonState1 = 0;         // variable for reading the pushbutton status
+int buttonState2 = 0; 
 
 // Notes is an array of text characters corresponding to the notes
 // in your song. A space represents a rest (no tone)
@@ -37,7 +39,7 @@ int beats[] = {1,1,1,1,1,1,4,4,2,1,1,1,1,1,1,4,4,2};
 // The tempo is how fast to play the song.
 // To make the song play faster, decrease this value.
 
-int tempo = 80;
+int tempo = 200;
 
 const int numNotes = 8;  // number of notes we're storing
 char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
@@ -47,31 +49,37 @@ void setup()
 {
   pinMode(buzzerPin, OUTPUT);
   Serial.begin(9600);
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin1, INPUT);
   pinMode(ledPin, OUTPUT);
 }
 
 bool doButtonStuff()
 {
   //this is HIGH or LOW
-  buttonState = digitalRead(buttonPin);
-  if(buttonState == HIGH)
+  buttonState1 = digitalRead(buttonPin1);
+  buttonState2 = digitalRead(buttonPin2);
+  if(buttonState1 == HIGH)
   {
     char note = 'c';
     int currFreq = getFrequency(note);
-    Serial.println(note);
-    Serial.println(currFreq);
-    
-    //noteLen = 1;
-    int soundTime = 500; //ms //noteLen*tempo;
+    int soundTime = 500; //ms
     tone(buzzerPin, currFreq, soundTime);
-
+    Serial.println(note);
+    delay(1000);
+  }
+  else if(buttonState2 == HIGH)
+  {
+    char note = 'd';
+    int currFreq = getFrequency(note);
+    int soundTime = 500; //ms
+    tone(buzzerPin, currFreq, soundTime);
+    Serial.println(note);
     delay(1000);
   }
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-  digitalWrite(ledPin, buttonState);
+  digitalWrite(ledPin, buttonState1);
 
-  return buttonState == HIGH;
+  return buttonState1 == HIGH;
 }
 
 char getRandomNoteName()
@@ -108,10 +116,33 @@ void playIntroSong()
   extraHz += 100;
 }
 
+int noteCount = 4;
+void playRandomNotes()
+{
+  int i;
+  char randNoteNames[noteCount]; 
+  for(i = 0; i < noteCount; i++)
+  {
+    randNoteNames[i] = getRandomNoteName();
+  }
+  
+  for (i = 0; i < noteCount; i++) // step through the song arrays
+  {
+    int duration = 1 * tempo;  // length of note in ms
+    char note = randNoteNames[i];
+    int currFreq = getFrequency(note);
+    Serial.print(note);
+    Serial.print(' ');
+    tone(buzzerPin, currFreq, duration);
+    delay(duration);            // wait for tone to finish
+    delay(tempo/10); 
+  }
+}
+
 void loop() 
 {
-  playIntroSong();
-
+  playRandomNotes();
+  
   while(true)
   {
     if(doButtonStuff())
