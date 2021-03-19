@@ -41,7 +41,7 @@ int beats[] = {1,1,1,1,1,1,4,4,2,1,1,1,1,1,1,4,4,2};
 
 int tempo = 200;
 
-const int numNotes = 8;  // number of notes we're storing
+const int numNotes = 2;  // number of notes we're storing
 char noteNames[] = { 'c', 'd' }; //, 'e', 'f', 'g', 'a', 'b', 'C' };
 int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
