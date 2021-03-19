@@ -25,23 +25,12 @@ const int buzzerPin = 9;
 int buttonState1 = 0;         // variable for reading the pushbutton status
 int buttonState2 = 0; 
 
-// Notes is an array of text characters corresponding to the notes
-// in your song. A space represents a rest (no tone)
-
-char songNotes[] = "cdfda ag cdfdg gf "; // a space represents a rest
-
-// Beats is an array values for each note and rest.
-// A "1" represents a quarter-note, 2 a half-note, etc.
-// Don't forget that the rests (spaces) need a length as well.
-
-int beats[] = {1,1,1,1,1,1,4,4,2,1,1,1,1,1,1,4,4,2};
-
 // The tempo is how fast to play the song.
 // To make the song play faster, decrease this value.
 
 int tempo = 200;
 
-const int numNotes = 2;  // number of notes we're storing
+int noteNamesLen = 2;  // number of notes we're storing (length of noteNames[] array)
 char noteNames[] = { 'c', 'd' }; //, 'e', 'f', 'g', 'a', 'b', 'C' };
 int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
@@ -65,8 +54,6 @@ bool doButtonStuff()
   buttonState2 = digitalRead(buttonPin2);
   bool buttonPressed = false;
   char notePressed;
-  int currFreq;
-  int soundTime = 500; //ms
   if(buttonState1 == HIGH)
   {
     notePressed = 'c';
@@ -78,13 +65,14 @@ bool doButtonStuff()
     buttonPressed = true;
   }
 
+  int currFreq;
+  int soundTime = tempo; //ms 
   if(buttonPressed)
   {
     currFreq = getFrequency(notePressed);
     tone(buzzerPin, currFreq, soundTime);
+    delay(soundTime); //allows the sound to play
     Serial.println(notePressed);
-    delay(1000);
-
     char currCorrectNote = randNotes[currAnswerIndex];
 
     isCorrectAnswer = notePressed == currCorrectNote;
@@ -112,23 +100,20 @@ bool doButtonStuff()
     currAnswerIndex = 0;
     Serial.println(isCorrectAnswer);
     isCorrectAnswer = true;
+    delay(500);
     return true;  
   }
   return false;
 }
 
-char getRandomNoteName()
-{
-  int randIndex = random(numNotes);
-  return noteNames[randIndex];
-}
-
 void playRandomNotes()
 {
   int i;
+  int correctIndices[noteCount];
   for(i = 0; i < noteCount; i++)
   {
-    randNotes[i] = getRandomNoteName();
+    int randIndex = random(noteNamesLen);
+    randNotes[i] = noteNames[randIndex];
   }
   
   for (i = 0; i < noteCount; i++) 
@@ -161,21 +146,13 @@ void loop()
 
 int getFrequency(char note) 
 {
-  // This function takes a note character (a-g), and returns the
-  // corresponding frequency in Hz for the tone() function.
-  
   int i;
-
-  // Now we'll search through the letters in the array, and if
-  // we find it, we'll return the frequency for that note.
-  
-  for (i = 0; i < numNotes; i++)  // Step through the notes
+  for (i = 0; i < noteNamesLen; i++)  
   {
-    if (noteNames[i] == note)         // Is this the one?
+    if (noteNames[i] == note)        
     {
-      return(frequencies[i]);     // Yes! Return the frequency
+      return(frequencies[i]);    
     }
   }
-  return(0);  // We looked through everything and didn't find it,
-              // but we still need to return a value, so return 0.
+  return(0);
 }
