@@ -117,19 +117,19 @@ void playIntroSong()
 }
 
 int noteCount = 4;
+char answer[4];
 void playRandomNotes()
 {
   int i;
-  char randNoteNames[noteCount]; 
   for(i = 0; i < noteCount; i++)
   {
-    randNoteNames[i] = getRandomNoteName();
+    answer[i] = getRandomNoteName();
   }
   
   for (i = 0; i < noteCount; i++) // step through the song arrays
   {
     int duration = 1 * tempo;  // length of note in ms
-    char note = randNoteNames[i];
+    char note = answer[i];
     int currFreq = getFrequency(note);
     Serial.print(note);
     Serial.print(' ');
