@@ -19,27 +19,50 @@ For more information, see http://arduino.cc/en/Tutorial/Tone
 
 const int buttonPin1 = 2; 
 const int buttonPin2 = 3; 
+const int buttonPin3 = 4; 
+const int buttonPin4 = 5; 
+const int buttonPin5 = 6; 
+const int buttonPin6 = 7; 
+const int buttonPin7 = 8; 
+const int buttonPin8 = 9; 
+
 const int ledPinGreen =  11;  
 const int ledPinRed =  12;  
 const int buzzerPin = 10;  
 
-int buttonState1 = 0;         // variable for reading the pushbutton status
+ // variables for reading the pushbutton status
+int buttonState1 = 0;        
 int buttonState2 = 0; 
+int buttonState3 = 0;        
+int buttonState4 = 0; 
+int buttonState5 = 0;        
+int buttonState6 = 0; 
+int buttonState7 = 0;        
+int buttonState8 = 0; 
 
 // The tempo is how fast to play the song.
 // To make the song play faster, decrease this value.
 
 int tempo = 200;
 
-int noteNamesLen = 2;  // number of notes we're storing (length of noteNames[] array)
-char noteNames[] = { 'c', 'd' }; //, 'e', 'f', 'g', 'a', 'b', 'C' };
+int noteNamesLen = 8;  // number of notes we're storing (length of noteNames[] array)
+char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
 int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
 void setup() 
 {
-  pinMode(buzzerPin, OUTPUT);
   Serial.begin(9600);
+  pinMode(buzzerPin, OUTPUT);
+  
   pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
+  pinMode(buttonPin3, INPUT);
+  pinMode(buttonPin4, INPUT);
+  pinMode(buttonPin5, INPUT);
+  pinMode(buttonPin6, INPUT);
+  pinMode(buttonPin7, INPUT);
+  pinMode(buttonPin8, INPUT);
+  
   pinMode(ledPinGreen, OUTPUT);
   pinMode(ledPinRed, OUTPUT);
 }
@@ -54,6 +77,13 @@ bool doButtonStuff()
   //this is HIGH or LOW
   buttonState1 = digitalRead(buttonPin1);
   buttonState2 = digitalRead(buttonPin2);
+  buttonState3 = digitalRead(buttonPin3);
+  buttonState4 = digitalRead(buttonPin4);
+  buttonState5 = digitalRead(buttonPin5);
+  buttonState6 = digitalRead(buttonPin6);
+  buttonState7 = digitalRead(buttonPin7);
+  buttonState8 = digitalRead(buttonPin8);
+  
   bool buttonPressed = false;
   char notePressed;
   if(buttonState1 == HIGH)
@@ -64,6 +94,36 @@ bool doButtonStuff()
   else if(buttonState2 == HIGH)
   {
     notePressed = 'd';
+    buttonPressed = true;
+  }
+  else if(buttonState3 == HIGH)
+  {
+    notePressed = 'e';
+    buttonPressed = true;
+  }
+  else if(buttonState4 == HIGH)
+  {
+    notePressed = 'f';
+    buttonPressed = true;
+  }
+  else if(buttonState5 == HIGH)
+  {
+    notePressed = 'g';
+    buttonPressed = true;
+  }
+  else if(buttonState6 == HIGH)
+  {
+    notePressed = 'a';
+    buttonPressed = true;
+  }
+  else if(buttonState7 == HIGH)
+  {
+    notePressed = 'b';
+    buttonPressed = true;
+  }
+  else if(buttonState8 == HIGH)
+  {
+    notePressed = 'C';
     buttonPressed = true;
   }
 
@@ -95,7 +155,7 @@ bool doButtonStuff()
     }
     delay(soundTime/2);
     digitalWrite(ledPinGreen, LOW);
-    digitalWrite(ledPinGreen, LOW);
+    digitalWrite(ledPinRed, LOW);
     
     currAnswerIndex++;  
   }
