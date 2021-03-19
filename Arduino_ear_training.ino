@@ -19,8 +19,9 @@ For more information, see http://arduino.cc/en/Tutorial/Tone
 
 const int buttonPin1 = 2; 
 const int buttonPin2 = 3; 
-const int ledPin =  13;   
-const int buzzerPin = 9;  
+const int ledPinGreen =  11;  
+const int ledPinRed =  12;  
+const int buzzerPin = 10;  
 
 int buttonState1 = 0;         // variable for reading the pushbutton status
 int buttonState2 = 0; 
@@ -39,7 +40,8 @@ void setup()
   pinMode(buzzerPin, OUTPUT);
   Serial.begin(9600);
   pinMode(buttonPin1, INPUT);
-  pinMode(ledPin, OUTPUT);
+  pinMode(ledPinGreen, OUTPUT);
+  pinMode(ledPinRed, OUTPUT);
 }
 
 int noteCount = 4;
@@ -71,7 +73,7 @@ bool doButtonStuff()
   {
     currFreq = getFrequency(notePressed);
     tone(buzzerPin, currFreq, soundTime);
-    delay(soundTime); //allows the sound to play
+    delay(soundTime/2); //allows the sound to play
     Serial.println(notePressed);
     char currCorrectNote = randNotes[currAnswerIndex];
 
@@ -84,16 +86,19 @@ bool doButtonStuff()
     if(isCorrectAnswer)
     {
       Serial.print("Correct!");
+      digitalWrite(ledPinGreen, HIGH);
     }
     else
     {
       Serial.print("Wrong!");
+      digitalWrite(ledPinRed, HIGH);
     }
+    delay(soundTime/2);
+    digitalWrite(ledPinGreen, LOW);
+    digitalWrite(ledPinGreen, LOW);
+    
     currAnswerIndex++;  
   }
-  
-  // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-  digitalWrite(ledPin, buttonState1);
 
   if(currAnswerIndex == noteCount)
   {
