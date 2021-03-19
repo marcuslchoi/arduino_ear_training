@@ -42,7 +42,7 @@ int beats[] = {1,1,1,1,1,1,4,4,2,1,1,1,1,1,1,4,4,2};
 int tempo = 200;
 
 const int numNotes = 8;  // number of notes we're storing
-char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+char noteNames[] = { 'c', 'd' }; //, 'e', 'f', 'g', 'a', 'b', 'C' };
 int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 
 void setup() 
@@ -53,33 +53,68 @@ void setup()
   pinMode(ledPin, OUTPUT);
 }
 
+int noteCount = 4;
+char randNotes[4]; //size should be equal to noteCount
+int currAnswerIndex = 0;
+bool isCorrectAnswer = true;
+
 bool doButtonStuff()
 {
   //this is HIGH or LOW
   buttonState1 = digitalRead(buttonPin1);
   buttonState2 = digitalRead(buttonPin2);
+  bool buttonPressed = false;
+  char notePressed;
+  int currFreq;
+  int soundTime = 500; //ms
   if(buttonState1 == HIGH)
   {
-    char note = 'c';
-    int currFreq = getFrequency(note);
-    int soundTime = 500; //ms
-    tone(buzzerPin, currFreq, soundTime);
-    Serial.println(note);
-    delay(1000);
+    notePressed = 'c';
+    buttonPressed = true;
   }
   else if(buttonState2 == HIGH)
   {
-    char note = 'd';
-    int currFreq = getFrequency(note);
-    int soundTime = 500; //ms
-    tone(buzzerPin, currFreq, soundTime);
-    Serial.println(note);
-    delay(1000);
+    notePressed = 'd';
+    buttonPressed = true;
   }
+
+  if(buttonPressed)
+  {
+    currFreq = getFrequency(notePressed);
+    tone(buzzerPin, currFreq, soundTime);
+    Serial.println(notePressed);
+    delay(1000);
+
+    char currCorrectNote = randNotes[currAnswerIndex];
+
+    isCorrectAnswer = notePressed == currCorrectNote;
+    
+    Serial.print("correct answer:");
+    Serial.println(randNotes[currAnswerIndex]);
+    Serial.print("my answer:");
+    Serial.println(notePressed);
+    if(isCorrectAnswer)
+    {
+      Serial.print("Correct!");
+    }
+    else
+    {
+      Serial.print("Wrong!");
+    }
+    currAnswerIndex++;  
+  }
+  
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   digitalWrite(ledPin, buttonState1);
 
-  return buttonState1 == HIGH;
+  if(currAnswerIndex == noteCount)
+  {
+    currAnswerIndex = 0;
+    Serial.println(isCorrectAnswer);
+    isCorrectAnswer = true;
+    return true;  
+  }
+  return false;
 }
 
 char getRandomNoteName()
@@ -88,51 +123,23 @@ char getRandomNoteName()
   return noteNames[randIndex];
 }
 
-int extraHz = 0;
-void playIntroSong()
-{
-  int i, duration;
-  int songLength = sizeof(beats)/sizeof(int);
-  
-  for (i = 0; i < songLength; i++) // step through the song arrays
-  {
-    duration = beats[i] * tempo;  // length of note/rest in ms
-    
-    if (songNotes[i] == ' ')          // is this a rest? 
-    {
-      delay(duration);            // then pause for a moment
-    }
-    else                          // otherwise, play the note
-    {
-      int currFreq = getFrequency(songNotes[i]) + extraHz;
-      Serial.print(currFreq);
-      Serial.print(' ');
-      tone(buzzerPin, currFreq, duration);
-      delay(duration);            // wait for tone to finish
-    }
-    delay(tempo/10);              // brief pause between notes
-  }
-  Serial.println();
-  extraHz += 100;
-}
-
-int noteCount = 4;
-char answer[4];
 void playRandomNotes()
 {
   int i;
   for(i = 0; i < noteCount; i++)
   {
-    answer[i] = getRandomNoteName();
+    randNotes[i] = getRandomNoteName();
   }
   
-  for (i = 0; i < noteCount; i++) // step through the song arrays
+  for (i = 0; i < noteCount; i++) 
   {
     int duration = 1 * tempo;  // length of note in ms
-    char note = answer[i];
-    int currFreq = getFrequency(note);
+    char note = randNotes[i];
+    Serial.print(i);
+    Serial.print(":");
     Serial.print(note);
-    Serial.print(' ');
+    Serial.println("");
+    int currFreq = getFrequency(note);
     tone(buzzerPin, currFreq, duration);
     delay(duration);            // wait for tone to finish
     delay(tempo/10); 
