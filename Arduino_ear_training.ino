@@ -67,6 +67,22 @@ void setup()
   pinMode(ledPinRed, OUTPUT);
 }
 
+void playArpeggio()
+{ 
+  int i;
+  char arpeggio[] = {'c','e','g','C'};
+  int arpeggioLen = 4;
+  int duration = tempo;
+  for(i = 0; i < arpeggioLen; i++)
+  {
+    char note = arpeggio[i];
+    int currFreq = getFrequency(note);
+    tone(buzzerPin, currFreq, duration);
+    delay(duration);
+  }
+  delay(5*tempo);
+}
+
 int noteCount = 4;
 char randNotes[4]; //size should be equal to noteCount
 int currAnswerIndex = 0;
@@ -192,12 +208,13 @@ void playRandomNotes()
     int currFreq = getFrequency(note);
     tone(buzzerPin, currFreq, duration);
     delay(duration);            // wait for tone to finish
-    delay(tempo/10); 
+    delay(tempo/10);            // wait a short time so notes don't blend together
   }
 }
 
 void loop() 
 {
+  playArpeggio();
   playRandomNotes();
   
   while(true)
