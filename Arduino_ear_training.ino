@@ -65,6 +65,7 @@ void setup()
   pinMode(ledPinRed, OUTPUT);
 }
 
+bool shouldPlayArpeggio = true;
 void playArpeggio()
 { 
   int i;
@@ -79,12 +80,19 @@ void playArpeggio()
     delay(beatDur);
   }
   delay(5*beatDur);
+  shouldPlayArpeggio = false;
 }
 
 int noteCount = 4;
 char randNotes[4]; //size should be equal to noteCount
 int currAnswerIndex = 0;
 bool isCorrectAnswer = true;
+
+void resetAnswerProperties()
+{
+  currAnswerIndex = 0;
+  isCorrectAnswer = true;
+}
 
 bool checkForButtonPress()
 {
@@ -166,6 +174,10 @@ bool checkForButtonPress()
     {
       Serial.print("Wrong!");
       digitalWrite(ledPinRed, HIGH);
+      resetAnswerProperties();
+      shouldPlayArpeggio = true;
+      delay(500);
+      return true; 
     }
     delay(soundTime/2);
     digitalWrite(ledPinGreen, LOW);
@@ -176,9 +188,7 @@ bool checkForButtonPress()
 
   if(currAnswerIndex == noteCount)
   {
-    currAnswerIndex = 0;
-    Serial.println(isCorrectAnswer);
-    isCorrectAnswer = true;
+    resetAnswerProperties();
     delay(500);
     return true;  
   }
@@ -212,7 +222,11 @@ void playRandomNotes()
 
 void loop() 
 {
-  playArpeggio();
+  if(shouldPlayArpeggio) 
+  {
+    playArpeggio();
+  }
+  
   playRandomNotes();
   
   while(true)
