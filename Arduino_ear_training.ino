@@ -40,10 +40,8 @@ int buttonState6 = 0;
 int buttonState7 = 0;        
 int buttonState8 = 0; 
 
-// The tempo is how fast to play the song.
 // To make the song play faster, decrease this value.
-
-int tempo = 200;
+int beatDur = 200;
 
 int noteNamesLen = 8;  // number of notes we're storing (length of noteNames[] array)
 char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
@@ -72,15 +70,15 @@ void playArpeggio()
   int i;
   char arpeggio[] = {'c','e','g','C'};
   int arpeggioLen = 4;
-  int duration = tempo;
+  int duration = beatDur;
   for(i = 0; i < arpeggioLen; i++)
   {
     char note = arpeggio[i];
     int currFreq = getFrequency(note);
     tone(buzzerPin, currFreq, duration);
-    delay(duration);
+    delay(beatDur);
   }
-  delay(5*tempo);
+  delay(5*beatDur);
 }
 
 int noteCount = 4;
@@ -88,7 +86,7 @@ char randNotes[4]; //size should be equal to noteCount
 int currAnswerIndex = 0;
 bool isCorrectAnswer = true;
 
-bool doButtonStuff()
+bool checkForButtonPress()
 {
   //this is HIGH or LOW
   buttonState1 = digitalRead(buttonPin1);
@@ -144,7 +142,7 @@ bool doButtonStuff()
   }
 
   int currFreq;
-  int soundTime = tempo; //ms 
+  int soundTime = beatDur; //ms 
   if(buttonPressed)
   {
     currFreq = getFrequency(notePressed);
@@ -199,7 +197,7 @@ void playRandomNotes()
   
   for (i = 0; i < noteCount; i++) 
   {
-    int duration = 1 * tempo;  // length of note in ms
+    int duration = 1 * beatDur;  // length of note in ms
     char note = randNotes[i];
     Serial.print(i);
     Serial.print(":");
@@ -208,7 +206,7 @@ void playRandomNotes()
     int currFreq = getFrequency(note);
     tone(buzzerPin, currFreq, duration);
     delay(duration);            // wait for tone to finish
-    delay(tempo/10);            // wait a short time so notes don't blend together
+    delay(beatDur/10);            // wait a short time so notes don't blend together
   }
 }
 
@@ -219,7 +217,7 @@ void loop()
   
   while(true)
   {
-    if(doButtonStuff())
+    if(checkForButtonPress())
     {
       break;  
     }
