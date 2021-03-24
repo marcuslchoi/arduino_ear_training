@@ -40,8 +40,8 @@ int buttonState6 = 0;
 int buttonState7 = 0;        
 int buttonState8 = 0; 
 
-// To make the song play faster, decrease this value.
-int beatDur = 200;
+//Beat duration (ms): To make the song play faster, decrease this value.
+int beatDur = 300;
 
 int noteNamesLen = 8;  // number of notes we're storing (length of noteNames[] array)
 char noteNames[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
@@ -50,6 +50,8 @@ int frequencies[] = {262, 294, 330, 349, 392, 440, 494, 523};
 void setup() 
 {
   Serial.begin(9600);
+  //initialize random with a random value (analogRead of unconnected pin)
+  randomSeed(analogRead(0)); 
   pinMode(buzzerPin, OUTPUT);
   
   pinMode(buttonPin1, INPUT);
@@ -177,6 +179,7 @@ bool checkForButtonPress()
       resetAnswerProperties();
       shouldPlayArpeggio = true;
       delay(500);
+      digitalWrite(ledPinRed, LOW);
       return true; 
     }
     delay(soundTime/2);
